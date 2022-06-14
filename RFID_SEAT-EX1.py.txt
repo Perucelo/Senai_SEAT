@@ -1,0 +1,22 @@
+from mfrc522 import MFRC522
+from machine import Pin
+from machine import SPI
+
+spi SPI(2, baudrate=2500000, palrity=0, phase 0, bits=8, firstbit=0, 
+        sck=Pin(18), mosi=Pin(23), miso=Pin(19))
+
+# Pinos da porta SPI por hardware:
+#    SCK=18, mosi=23, miso=19 (padrão)
+#    rst=4, cs=5 (configurável)
+#******************************************
+
+spi.init()
+rdr = MFRC522(spi=spi, gpioRst=4, gpioCs=5)
+print(" Aproxime o cartao")
+while True:
+	(stat, tag_type) = rdr.request(rdr.REQIDL)
+	if stat == rdr.OK:
+		(stat, raw_uid) = rdr.anticoll()
+		if stat == rdr.OK:
+			card_id = 'uid: 0x%02x%02x%02x%02x" % (raw_uid[0], raw_uid[1], raw_uid[2], raw_uid[3])
+			print(card_id)
